@@ -1,6 +1,7 @@
 tsne <- as.matrix(read.csv("./tsne/2_components/projection.csv", row.names=1))
 clusters <- as.matrix(read.csv("./clustering/kmeans_9_clusters/clusters.csv", row.names=1))
 clusters <- structure(clusters[, 1], names = rownames(clusters))
+
 pdf("Fig1C.pdf", width = 10, height = 6)
 layout(matrix(1:2, 1, 2), widths = c(6, 4))
 par(mar = c(5, 5, 1, 1))
@@ -20,8 +21,13 @@ legend(0, 0.9, legend = c("Basal-1, n=1939",
                              "Mes-like, n=96",
                              "Proliferating, n=90"), y.intersp = 2, fill = colors, text.font = 2, cex = 1.5, bty = "n", border = NA)
 dev.off()
+#Figure 1C
 
+tsne <- as.matrix(read.csv("./tsne/2_components/projection.csv", row.names=1))
+clusters <- as.matrix(read.csv("./clustering/kmeans_9_clusters/clusters.csv", row.names=1))
+clusters <- structure(clusters[, 1], names = rownames(clusters))
 load("./expression/tpm.rda")
+
 pdf("Fig1D.pdf", width = 12, height = 16)
 par(mfrow = c(4, 3), mar = c(0, 0, 5, 0))
 for (x in c("Epcam", "Nkx2-1", "Mki67",
@@ -32,42 +38,12 @@ for (x in c("Epcam", "Nkx2-1", "Mki67",
   colors <- colorRampPalette(c("Grey", "Yellow", "Red"))(102)[ceiling((colors-min(colors))/(max(colors)-min(colors))*100)+1]
   plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 4)}
 dev.off()
-#cellranger analysis
-
-# load("./expression/tpm.rda")
-# tpm <- tpm[rowSums(tpm > 0)/ncol(tpm) > 0.2, ]
-# genes <- c("Cd44", "Krt17", "Tgm2", "Isl1", "Cav1")
-# mi <- do.call(rbind, lapply(list.files(path="../aracne/", pattern="network.tsv", full.names=T), function(f) read.delim(f, header=F, stringsAsFactors=F)))
-# mi <- mi[mi$V1 %in% genes, ]
-# gset <- lapply(genes, function(x, mi, tpm){
-#   mi <- structure(mi$V3[mi$V1 == x], names=mi$V2[mi$V1 == x])
-#   r <- structure(unlist(lapply(setdiff(rownames(tpm), x), function(y, x, tpm){
-#     cor(tpm[x, ], tpm[y, ], method = "spearman")
-#   }, x=x, tpm=tpm)), names=setdiff(rownames(tpm), x))
-#   mi <- mi[names(r)[r > 0]]
-#   list(tfmode=structure(rep(1, 100), names=names(sort(mi, decreasing = T))[1:100]), likelihood=rep(1, 100))
-# }, mi=mi, tpm=tpm)
-# names(gset) <- genes
-# 
-# r <- structure(lapply(genes, function(x, tpm){
-#   r <- unlist(lapply(setdiff(rownames(tpm), genes), function(y, tpm){
-#     xx <- tpm[x, ]
-#     yy <- tpm[y, ]
-#     # xx[xx == 0] <- NA
-#     # yy[yy == 0] <- NA
-#     cor(xx, yy, use = "pairwise.complete.obs", method = "spearman")}, tpm=tpm))
-#   names(r) <- setdiff(rownames(tpm), genes)
-#   r}, tpm=tpm), names=genes)
-# gset <- lapply(r, function(rr) list(tfmode=structure(rep(1, 100), names=names(sort(rr, decreasing = T))[1:100]),
-#                                     likelihood=structure(sort(rr, decreasing = T)[1:100], names=NULL)))
-# rank <- apply(tpm, 2, rank)
-# rank <- (rank - apply(rank, 1, median))/apply(rank, 1, mad)
-# nes <- aREA(rank, gset)$nes
-# 
-# source("~/Desktop/ColorGradient.R")
-# for (x in rownames(nes)) plot(tsne, pch = 16, col = nesColor(x, nes), xlab = "tSNE-1", ylab = "tSNE-2", main = x)
+#Figure 1D
 
 library(vioplot)
+tsne <- as.matrix(read.csv("./tsne/2_components/projection.csv", row.names=1))
+clusters <- as.matrix(read.csv("./clustering/kmeans_9_clusters/clusters.csv", row.names=1))
+clusters <- structure(clusters[, 1], names = rownames(clusters))
 load("./expression/tpm.rda")
 colors <- c(rgb(43, 120, 182, maxColorValue = 255),
             rgb(247, 126, 11, maxColorValue = 255),
@@ -111,28 +87,32 @@ table <- lapply(1:6, function(i, clusters, z) z[clusters == i], clusters=cluster
 vioplot(table, col = colors, names = rep("", 6), cex.axis = 3, main = "Luminal Score", cex.main = 4)
 axis(side = 1, line = 1, at = 1:6, labels = c("BC1", "BC2", "Sec.", "Sq.", "Mes.", "Pro."), tick = F, cex.axis = 3)
 dev.off()
-
+#SFigure 2
+                
+tsne <- as.matrix(read.csv("./tsne/2_components/projection.csv", row.names=1))
+clusters <- as.matrix(read.csv("./clustering/kmeans_9_clusters/clusters.csv", row.names=1))
+clusters <- structure(clusters[, 1], names = rownames(clusters))
 load("./expression/tpm.rda")
 d <- rowMeans(tpm[, clusters == 1]) - rowMeans(tpm[, clusters == 2])
 z <- (tpm - rowMeans(tpm))/apply(tpm, 1, sd)
 z <- z[!is.na(rowSums(z)), ]
 z <- z[rev(c(names(sort(d, decreasing = T))[1:50], rev(names(sort(d, decreasing = F))[1:50]))), 
        c(which(clusters == 1), which(clusters == 2))]
+
 pdf("SFig3A.pdf", width = 14, height = 22)
 layout(matrix(1:2, 1, 2, byrow = T), widths = c(2, 4))
 par(mar = c(52, 1, 52, 6))
 image(matrix(1:100, 100, 1, byrow = T), col = colorRampPalette(c("Blue", "White", "Red"))(100), axes = F, main = "")
 axis(side = 3, at = 0.5, labels = "Z-Score", tick = F, cex.axis = 2)
 axis(side = 1, at = c(0, 0.5, 1), labels = c(-4, 0, 4), tick = F, cex.axis = 2)
-#color scale   par (mar = c(bottom, left, up, right))
+
 par(mar = c(1, 6, 4, 1))
 image(t(z), col = colorRampPalette(c("Blue", "Grey", "Red"))(100), axes = F,
       breaks = seq(-4, 4, length.out = 101), main = "Basal-1 vs. Basal-2", cex.main = 4)
 abline(NULL, NULL, NULL, cumsum(c(0, sum(clusters == 1), sum(clusters == 2)))/ncol(z))
 axis(side = 2, at = seq(0, 1, length.out = nrow(z)), labels = rownames(z), tick = F, las = 2, cex.axis = 1.5)
-#heatmap
 dev.off()
-
+#SFigure 3A
 
 load("./expression/tpm.rda")
 z <- (tpm - rowMeans(tpm))/apply(tpm, 1, sd)
@@ -142,21 +122,25 @@ z <- z[c("Klf6", "Maff", "Klf4", "Barx2", "Myc", "Foxq1", "Atf3", "Jun",
          "Bhlhe40", "Stat3", "Mafg", "Junb", "Nfix", "Tef", "Id1", 
          "Six1", "Tsc22d3", "Mecom", "Isl1", "Cited2"), 
        c(which(clusters == 1), which(clusters == 2))]
+
 pdf("SFig3B.pdf", width = 14, height = 10)
 layout(matrix(1:2, 1, 2, byrow = T), widths = c(2, 4))
 par(mar = c(26, 1, 20, 6))
 image(matrix(1:100, 100, 1, byrow = T), col = colorRampPalette(c("Blue", "White", "Red"))(100), axes = F, main = "")
 axis(side = 3, at = 0.5, labels = "Z-Score", tick = F, cex.axis = 2)
 axis(side = 1, at = c(0, 0.5, 1), labels = c(-4, 0, 4), tick = F, cex.axis = 2)
-#color scale   par (mar = c(bottom, left, up, right))
+
 par(mar = c(4, 4, 6, 1))
 image(t(z), col = colorRampPalette(c("Blue", "Grey", "Red"))(100), axes = F,
       breaks = seq(-4, 4, length.out = 101), main = "Basal-1 vs. Basal-2", cex.main = 4)
 abline(NULL, NULL, NULL, cumsum(c(0, sum(clusters == 1), sum(clusters == 2)))/ncol(z))
 axis(side = 2, at = seq(0, 1, length.out = nrow(z)), labels = rownames(z), tick = F, las = 2, cex.axis = 1.5)
-#heatmap
 dev.off()
+#SFigure 3B
 
+tsne <- as.matrix(read.csv("./tsne/2_components/projection.csv", row.names=1))
+clusters <- as.matrix(read.csv("./clustering/kmeans_9_clusters/clusters.csv", row.names=1))
+clusters <- structure(clusters[, 1], names = rownames(clusters))
 load("./expression/tpm.rda")
 tpm <- tpm[!duplicated(rownames(tpm)), ]
 p <- -log10(p.adjust(unlist(lapply(1:nrow(tpm), function(i, x, y){
@@ -173,7 +157,11 @@ plot(d, p, pch = 16, cex = 0.5, xlab = "d", ylab = "-log10(p)", xlim = c(-8, 8),
 points(d[genes], p[genes], col = 2, pch = 16, cex = 1)
 text(d[genes], p[genes], labels = genes, col = 2, cex = 1, pos = 2)
 dev.off()
+#SFigure 4A
 
+tsne <- as.matrix(read.csv("./tsne/2_components/projection.csv", row.names=1))
+clusters <- as.matrix(read.csv("./clustering/kmeans_9_clusters/clusters.csv", row.names=1))
+clusters <- structure(clusters[, 1], names = rownames(clusters))
 load("./expression/tpm.rda")
 z <- (tpm - rowMeans(tpm))/apply(tpm, 1, sd)
 z <- z[!is.na(rowSums(z)), ]
@@ -190,13 +178,14 @@ z <- z[c("Trp53inp2", "Cldn4", "Barx2", "Crip1", "Pdzk1ip1",
        c(which(clusters == 1), which(clusters == 2),
          which(clusters == 3), which(clusters == 4),
          which(clusters == 5), which(clusters == 6))]
+
 pdf("SFig4C.pdf", width = 18, height = 12)
 layout(matrix(1:2, 1, 2, byrow = T), widths = c(2, 4))
 par(mar = c(45, 1, 10, 10))
 image(matrix(1:100, 100, 1, byrow = T), col = colorRampPalette(c("Blue", "White", "Red"))(100), axes = F, main = "")
 axis(side = 3, at = 0.5, labels = "Z-Score", tick = F, cex.axis = 2)
 axis(side = 1, at = c(0, 0.5, 1), labels = c(-4, 0, 4), tick = F, cex.axis = 2)
-#color scale   par (mar = c(bottom, left, up, right))
+
 par(mar = c(1, 4, 1, 1))
 image(t(z), col = colorRampPalette(c("Blue", "Grey", "Red"))(100),
       axes = F, breaks = seq(-4, 4, length.out = 101), main = "")
@@ -204,9 +193,12 @@ abline(NULL, NULL, NULL, cumsum(c(0, sum(clusters == 1), sum(clusters == 2),
                                   sum(clusters == 3), sum(clusters == 4),
                                   sum(clusters == 5), sum(clusters == 6)))/ncol(z))
 axis(side = 2, at = seq(0, 1, length.out = nrow(z)), labels = rownames(z), tick = F, las = 2, cex.axis = 1.5)
-#heatmap
 dev.off()
+#SFigure 4C
 
+tsne <- as.matrix(read.csv("./tsne/2_components/projection.csv", row.names=1))
+clusters <- as.matrix(read.csv("./clustering/kmeans_9_clusters/clusters.csv", row.names=1))
+clusters <- structure(clusters[, 1], names = rownames(clusters))
 load("./expression/tpm.rda")
 z <- (tpm - rowMeans(tpm))/apply(tpm, 1, sd)
 z <- z[!is.na(rowSums(z)), ]
@@ -215,13 +207,14 @@ z <- z[c("Tsc22d3", "Trp63", "Srebf2", "Pax9", "Klf4",
        c(which(clusters == 1), which(clusters == 2),
          which(clusters == 3), which(clusters == 4),
          which(clusters == 5), which(clusters == 6))]
+
 pdf("SFig4D.pdf", width = 18, height = 5)
 layout(matrix(1:2, 1, 2, byrow = T), widths = c(2, 4))
 par(mar = c(10, 1, 10, 10))
 image(matrix(1:100, 100, 1, byrow = T), col = colorRampPalette(c("Blue", "White", "Red"))(100), axes = F, main = "")
 axis(side = 3, at = 0.5, labels = "Z-Score", tick = F, cex.axis = 2)
 axis(side = 1, at = c(0, 0.5, 1), labels = c(-4, 0, 4), tick = F, cex.axis = 2)
-#color scale   par (mar = c(bottom, left, up, right))
+
 par(mar = c(4, 4, 4, 1))
 image(t(z), col = colorRampPalette(c("Blue", "Grey", "Red"))(100), axes = F,
       breaks = seq(-4, 4, length.out = 101), main = "")
@@ -229,22 +222,14 @@ abline(NULL, NULL, NULL, cumsum(c(0, sum(clusters == 1), sum(clusters == 2),
                                   sum(clusters == 3), sum(clusters == 4),
                                   sum(clusters == 5), sum(clusters == 6)))/ncol(z))
 axis(side = 2, at = seq(0, 1, length.out = nrow(z)), labels = rownames(z), tick = F, las = 2, cex.axis = 1.5)
-#heatmap
 dev.off()
+#SFigure 4D
 
-# library(viridis)
-# library(vioplot)
-# ct <- read.delim("./CytoTRACE_results.txt", stringsAsFactors=FALSE, row.names=1)
-# rownames(ct) <- gsub("[.]", "-", rownames(ct))
-# ct <- ct[rownames(tsne), ]
-# colors <- viridis_pal()(102)[ceiling(ct$CytoTRACE*100)+1]
-# plot(tsne[clusters %in% 1:6, ], pch = 16, col = colors, xlab = "tSNE-1", ylab = "tSNE-2", cex.axis = 2, cex.lab = 2, main = "")
-# table <- lapply(1:6, function(i, clusters, ct) ct$CytoTRACE[clusters == i], clusters=clusters, ct=ct)
-# par(mar = c(6, 6, 1, 1))
-# vioplot(table, names = c("Basal-1", "Basal-2", "Secretory", "Squamous", "Mes-like", "Proliferating"))
-
-
+tsne <- as.matrix(read.csv("./tsne/2_components/projection.csv", row.names=1))
+clusters <- as.matrix(read.csv("./clustering/kmeans_9_clusters/clusters.csv", row.names=1))
+clusters <- structure(clusters[, 1], names = rownames(clusters))
 load("./expression/tpm.rda")
+
 pdf("SFig5.pdf", width = 24, height = 22)
 par(mfrow = c(11, 12), mar = c(0, 0, 5, 0))
 for (x in c("Trp63", "Nppc")){
@@ -346,3 +331,4 @@ for (x in c("Krt5", "Krt8", "Col17a1", "Igfbp3", "Krt14", "Bcam", "Dcn")){
   plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2)}
 for (i in 1:5) plot.new()
 dev.off()
+#SFigure 5
