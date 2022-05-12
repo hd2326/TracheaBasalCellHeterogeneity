@@ -1,3 +1,6 @@
+# Raw umi matrix is avaliable at GEO under accession number: GSE134064
+# tpm matrix is generated using: tpm <- log2(t(t(umi)/(colSums(umi)/1e6)) + 1)
+
 tsne <- as.matrix(read.csv("./tsne/2_components/projection.csv", row.names=1))
 clusters <- as.matrix(read.csv("./clustering/kmeans_9_clusters/clusters.csv", row.names=1))
 clusters <- structure(clusters[, 1], names = rownames(clusters))
