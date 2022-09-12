@@ -70,7 +70,8 @@ for (gene in c("Epcam", "Nkx2-1", "Trp63", "Krt5", "Krt15",
     x[clusters == i]
   }, clusters=clusters[clusters %in% 1:6], x=tpm[gene, clusters %in% 1:6])
   vioplot(table, col = colors, names = c("BC1", "BC2", "Sec.", "Sq.", "Mes.", "Pro."),
-          ylab = "log2(tpm+1)", cex.lab = 2, cex.axis = 2, main = gene, cex.main = 3)}
+          ylab = "log2(tpm+1)", cex.lab = 2, cex.axis = 2)
+  axis(side = 3, at = 3.5, labels = gene, cex.axis = 3, tick = F, font = 4)}
 
 par(mar = c(4, 5, 8, 1))
 bc <- c("Trp63", "Krt5", "Snai2", "Egfr", "Krt15", "Jag2",
@@ -113,7 +114,7 @@ par(mar = c(1, 6, 4, 1))
 image(t(z), col = colorRampPalette(c("Blue", "Grey", "Red"))(100), axes = F,
       breaks = seq(-4, 4, length.out = 101), main = "Basal-1 vs. Basal-2", cex.main = 4)
 abline(NULL, NULL, NULL, cumsum(c(0, sum(clusters == 1), sum(clusters == 2)))/ncol(z))
-axis(side = 2, at = seq(0, 1, length.out = nrow(z)), labels = rownames(z), tick = F, las = 2, cex.axis = 1.5)
+axis(side = 2, at = seq(0, 1, length.out = nrow(z)), labels = rownames(z), tick = F, las = 2, cex.axis = 1.5, font.axis = 3)
 dev.off()
 #SFigure 3A
 
@@ -137,7 +138,7 @@ par(mar = c(4, 4, 6, 1))
 image(t(z), col = colorRampPalette(c("Blue", "Grey", "Red"))(100), axes = F,
       breaks = seq(-4, 4, length.out = 101), main = "Basal-1 vs. Basal-2", cex.main = 4)
 abline(NULL, NULL, NULL, cumsum(c(0, sum(clusters == 1), sum(clusters == 2)))/ncol(z))
-axis(side = 2, at = seq(0, 1, length.out = nrow(z)), labels = rownames(z), tick = F, las = 2, cex.axis = 1.5)
+axis(side = 2, at = seq(0, 1, length.out = nrow(z)), labels = rownames(z), tick = F, las = 2, cex.axis = 1.5, font.axis = 3)
 dev.off()
 #SFigure 3B
 
@@ -158,7 +159,7 @@ genes <- c("Krt6a", "Krt13", "Serpinb2", "Mal", "Krt14", "Krt4", "Dmkn", "Sprr1a
 plot(d, p, pch = 16, cex = 0.5, xlab = "d", ylab = "-log10(p)", xlim = c(-8, 8),
      cex.axis = 2, cex.lab = 2, main = "Squamous vs. Others", cex.main = 2)
 points(d[genes], p[genes], col = 2, pch = 16, cex = 1)
-text(d[genes], p[genes], labels = genes, col = 2, cex = 1, pos = 2)
+text(d[genes], p[genes], labels = genes, col = 2, cex = 1, pos = 2, font = 4)
 dev.off()
 #SFigure 4A
 
@@ -195,7 +196,7 @@ image(t(z), col = colorRampPalette(c("Blue", "Grey", "Red"))(100),
 abline(NULL, NULL, NULL, cumsum(c(0, sum(clusters == 1), sum(clusters == 2),
                                   sum(clusters == 3), sum(clusters == 4),
                                   sum(clusters == 5), sum(clusters == 6)))/ncol(z))
-axis(side = 2, at = seq(0, 1, length.out = nrow(z)), labels = rownames(z), tick = F, las = 2, cex.axis = 1.5)
+axis(side = 2, at = seq(0, 1, length.out = nrow(z)), labels = rownames(z), tick = F, las = 2, cex.axis = 1.5, font.axis = 3)
 dev.off()
 #SFigure 4C
 
@@ -224,7 +225,7 @@ image(t(z), col = colorRampPalette(c("Blue", "Grey", "Red"))(100), axes = F,
 abline(NULL, NULL, NULL, cumsum(c(0, sum(clusters == 1), sum(clusters == 2),
                                   sum(clusters == 3), sum(clusters == 4),
                                   sum(clusters == 5), sum(clusters == 6)))/ncol(z))
-axis(side = 2, at = seq(0, 1, length.out = nrow(z)), labels = rownames(z), tick = F, las = 2, cex.axis = 1.5)
+axis(side = 2, at = seq(0, 1, length.out = nrow(z)), labels = rownames(z), tick = F, las = 2, cex.axis = 1.5, font.axis = 3)
 dev.off()
 #SFigure 4D
 
@@ -241,7 +242,7 @@ for (x in c("Trp63", "Nppc")){
     colors <- rep("Grey", length(colors))
   }else{
     colors <- colorRampPalette(c("Grey", "Yellow", "Red"))(102)[ceiling((colors-min(colors))/(max(colors)-min(colors))*100)+1]}
-  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2)}
+  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2, font.main = 4)}
 for (i in 1:10) plot.new()
 
 for (x in c("Serpinb13")){
@@ -250,7 +251,7 @@ for (x in c("Serpinb13")){
     colors <- rep("Grey", length(colors))
   }else{
     colors <- colorRampPalette(c("Grey", "Yellow", "Red"))(102)[ceiling((colors-min(colors))/(max(colors)-min(colors))*100)+1]}
-  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2)}
+  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2, font.main = 4)}
 for (i in 1:11) plot.new()
 
 for (x in c("Mmp10", "Ctgf", "Phlda1", "Cyr61", "Tnfrsf12a")){
@@ -259,7 +260,7 @@ for (x in c("Mmp10", "Ctgf", "Phlda1", "Cyr61", "Tnfrsf12a")){
     colors <- rep("Grey", length(colors))
   }else{
     colors <- colorRampPalette(c("Grey", "Yellow", "Red"))(102)[ceiling((colors-min(colors))/(max(colors)-min(colors))*100)+1]}
-  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2)}
+  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2, font.main = 4)}
 for (i in 1:7) plot.new()
 
 for (x in c("Tuba1b", "Hist1h4c", "Stmn1", "Pttg1", "Ube2c")){
@@ -268,7 +269,7 @@ for (x in c("Tuba1b", "Hist1h4c", "Stmn1", "Pttg1", "Ube2c")){
     colors <- rep("Grey", length(colors))
   }else{
     colors <- colorRampPalette(c("Grey", "Yellow", "Red"))(102)[ceiling((colors-min(colors))/(max(colors)-min(colors))*100)+1]}
-  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2)}
+  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2, font.main = 4)}
 for (i in 1:7) plot.new()
 
 for (x in c("Serpinb3b", "Cldn4", "Krt16", "Plac8", "Plaur")){
@@ -277,7 +278,7 @@ for (x in c("Serpinb3b", "Cldn4", "Krt16", "Plac8", "Plaur")){
     colors <- rep("Grey", length(colors))
   }else{
     colors <- colorRampPalette(c("Grey", "Yellow", "Red"))(102)[ceiling((colors-min(colors))/(max(colors)-min(colors))*100)+1]}
-  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2)}
+  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2, font.main = 4)}
 for (i in 1:7) plot.new()
 
 for (x in c("Jun", "Zfp36", "Junb", "Id1", "Ier2")){
@@ -286,7 +287,7 @@ for (x in c("Jun", "Zfp36", "Junb", "Id1", "Ier2")){
     colors <- rep("Grey", length(colors))
   }else{
     colors <- colorRampPalette(c("Grey", "Yellow", "Red"))(102)[ceiling((colors-min(colors))/(max(colors)-min(colors))*100)+1]}
-  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2)}
+  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2, font.main = 4)}
 for (i in 1:7) plot.new()
 
 for (x in c("Postn", "Islr", "Snca", "Pcdh7", "Adh7", "Alox15")){
@@ -295,7 +296,7 @@ for (x in c("Postn", "Islr", "Snca", "Pcdh7", "Adh7", "Alox15")){
     colors <- rep("Grey", length(colors))
   }else{
     colors <- colorRampPalette(c("Grey", "Yellow", "Red"))(102)[ceiling((colors-min(colors))/(max(colors)-min(colors))*100)+1]}
-  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2)}
+  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2, font.main = 4)}
 for (i in 1:6) plot.new()
 
 for (x in c("Mki67", "Top2a", "Pbk", "Gtse1")){
@@ -304,7 +305,7 @@ for (x in c("Mki67", "Top2a", "Pbk", "Gtse1")){
     colors <- rep("Grey", length(colors))
   }else{
     colors <- colorRampPalette(c("Grey", "Yellow", "Red"))(102)[ceiling((colors-min(colors))/(max(colors)-min(colors))*100)+1]}
-  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2)}
+  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2, font.main = 4)}
 for (i in 1:8) plot.new()
 
 for (x in c("Krt7", "Scgb3a2", "Hes1", "Clca2", "Serpinb3a", "Serpinb3b", "Serpinb3c", "Serpinb3d")){
@@ -313,7 +314,7 @@ for (x in c("Krt7", "Scgb3a2", "Hes1", "Clca2", "Serpinb3a", "Serpinb3b", "Serpi
     colors <- rep("Grey", length(colors))
   }else{
     colors <- colorRampPalette(c("Grey", "Yellow", "Red"))(102)[ceiling((colors-min(colors))/(max(colors)-min(colors))*100)+1]}
-  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2)}
+  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2, font.main = 4)}
 for (i in 1:4) plot.new()
 
 for (x in c("Aqp3", "Icam1", "Krt17", "Krt5", "Krt15", "Sfn",
@@ -323,7 +324,7 @@ for (x in c("Aqp3", "Icam1", "Krt17", "Krt5", "Krt15", "Sfn",
     colors <- rep("Grey", length(colors))
   }else{
     colors <- colorRampPalette(c("Grey", "Yellow", "Red"))(102)[ceiling((colors-min(colors))/(max(colors)-min(colors))*100)+1]}
-  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2)}
+  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2, font.main = 4)}
 
 for (x in c("Krt5", "Krt8", "Col17a1", "Igfbp3", "Krt14", "Bcam", "Dcn")){
   colors <- tpm[x, clusters %in% 1:6]
@@ -331,7 +332,7 @@ for (x in c("Krt5", "Krt8", "Col17a1", "Igfbp3", "Krt14", "Bcam", "Dcn")){
     colors <- rep("Grey", length(colors))
   }else{
     colors <- colorRampPalette(c("Grey", "Yellow", "Red"))(102)[ceiling((colors-min(colors))/(max(colors)-min(colors))*100)+1]}
-  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2)}
+  plot(tsne[clusters %in% 1:6, ], pch = 16, cex = 0.5, col = colors, axes = F, xlab = "", ylab = "", main = x, cex.main = 2, font.main = 4)}
 for (i in 1:5) plot.new()
 dev.off()
 #SFigure 5
