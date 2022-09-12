@@ -43,6 +43,40 @@ for (x in c("Epcam", "Nkx2-1", "Mki67",
 dev.off()
 #Figure 1D
 
+clusters <- as.matrix(read.csv("./clustering/kmeans_9_clusters/clusters.csv", row.names=1))
+clusters <- structure(clusters[, 1], names = rownames(clusters))
+load("./expression/tpm.rda")
+e <- tpm[c("Mki67", "Ccna2", "Aurkb", "Ube2c", "Pbk", 
+           "Nusap1", "Cd3g", "Gng2", "Ptprcap", "Nkg7", 
+           "Trbc1", "Ccl5", "Cd52", "Id2", "Thy1", 
+           "Vim", "Tgfbi", "Igfbp2", "Mal", "Ly6d", 
+           "Sprr2a3", "Serpinb2", "Lypd3", "Dmkn", "Krt13", 
+           "Krt6a", "Krt14", "Tff2", "Aldh1a1", "Creb3l1", 
+           "Pon1", "Lyz2", "Bpifb1", "Muc5b", "Scgb3a1", 
+           "Scgb3a2", "Scgb1a1", "Pdpn", "Aqp3", "Aqp5", 
+           "Trp63", "Krt5", "Nkx2-1", "Epcam"),
+         c(which(clusters == 1), which(clusters == 2),
+           which(clusters == 3), which(clusters == 4),
+           which(clusters == 5), which(clusters == 6))]
+
+pdf("SFig1C.pdf", width = 14, height = 6)
+layout(matrix(1:2, 1, 2), widths = c(2, 12))
+par(mar = c(17, 1, 10, 1))
+image(matrix(1:20, 20, 1, byrow = T), col = colorRampPalette(c("Grey", "Red"))(20), axes = F, main = "log2(tpm+1)")
+axis(side = 1, at = c(0, 1), labels = c(0, floor(max(e)+1)), tick = F, cex.axis = 1)
+par(mar = c(4, 4, 4, 1))
+image(t(e), col = colorRampPalette(c("Grey", "Red"))(20), axes = F,
+      breaks = seq(0, floor(max(e)+1), length.out = 21), main = "")
+abline(NULL, NULL, NULL, cumsum(c(0, sum(clusters == 1), sum(clusters == 2),
+                                  sum(clusters == 3), sum(clusters == 4),
+                                  sum(clusters == 5), sum(clusters == 6)))/ncol(e))
+axis(side = 2, line = 0, at = seq(0, 1, length.out = nrow(e)), labels = rownames(e), tick = F, las = 2, cex.axis = 0.5, font.axis = 3)
+axis(side = 1, line = 0, at = cumsum(c(sum(clusters == 1), sum(clusters == 2),
+                                       sum(clusters == 3), sum(clusters == 4),
+                                       sum(clusters == 5), sum(clusters == 6)))/ncol(e), labels = NA, tick = F)
+dev.off()
+#SFigure 1C
+
 library(vioplot)
 tsne <- as.matrix(read.csv("./tsne/2_components/projection.csv", row.names=1))
 clusters <- as.matrix(read.csv("./clustering/kmeans_9_clusters/clusters.csv", row.names=1))
